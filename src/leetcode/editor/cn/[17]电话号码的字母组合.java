@@ -46,35 +46,35 @@ import java.util.Map;
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution17 {
     public List<String> letterCombinations(String digits) {
-        List<String> combinations=new ArrayList<String>();
-        if(digits.length()==0){
+        List<String> combinations = new ArrayList<String>();
+        if (digits.length() == 0) {
             return combinations;
         }
-        Map<Character,String> phoneMap=new HashMap<Character,String>(){{
-            put('2',"abc");
-            put('3',"def");
-            put('4',"ghi");
-            put('5',"jkl");
-            put('6',"mno");
-            put('7',"pqrs");
-            put('8',"tuv");
-            put('9',"wxyz");
+        Map<Character, String> phoneMap = new HashMap<Character, String>() {{
+            put('2', "abc");
+            put('3', "def");
+            put('4', "ghi");
+            put('5', "jkl");
+            put('6', "mno");
+            put('7', "pqrs");
+            put('8', "tuv");
+            put('9', "wxyz");
         }};
-        backtrack(combinations,phoneMap,digits,0,new StringBuffer());
+        backtrack(combinations, phoneMap, digits, 0, new StringBuffer());
         return combinations;
     }
 
-    public void backtrack(List<String>combinations,Map<Character,String>
-            phoneMap,String digits,int index,StringBuffer combination){
-        if(index==digits.length()){
+    public void backtrack(List<String> combinations, Map<Character, String>
+            phoneMap, String digits, int index, StringBuffer combination) {
+        if (index == digits.length()) {
             combinations.add(combination.toString());
-        }else{
-            char digit=digits.charAt(index);
-            String letters=phoneMap.get(digit);
-            int lettersCount=letters.length();
-            for(int i=0;i<lettersCount;i++){
+        } else {
+            char digit = digits.charAt(index);
+            String letters = phoneMap.get(digit);
+            int lettersCount = letters.length();
+            for (int i = 0; i < lettersCount; i++) {
                 combination.append(letters.charAt(i));
-                backtrack(combinations,phoneMap,digits,index+1,
+                backtrack(combinations, phoneMap, digits, index + 1,
                         combination);
                 //一个递归函数已将所有combination加入combinations list中，只需要对最后一个combination做一点小修饰
                 // StringBuffer删除最后一个字符，例如下例就是删除最后list格式中自带的","
