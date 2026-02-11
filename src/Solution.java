@@ -1,35 +1,37 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
 class Solution {
-    public int[][] merge(int[][] intervals) {
-        if (intervals.length == 0) {
-            return new int[0][2];
+    public void rotate(int[] nums, int k) {
+//        int n = nums.length;
+//        int[] newArr = new int[n];
+//        for (int i = 0; i < n; ++i) {
+//            newArr[(i + k) % n] = nums[i];
+//        }
+//        System.arraycopy(newArr, 0, nums, 0, n);
+
+        // 法2: 三次反转 O(n)/O(1)
+        int n = nums.length;
+        k = k % n;
+        reverse(nums, 0, n - 1);  // 整体反转
+        reverse(nums, 0, k - 1);  // 反转前k个
+        reverse(nums, k, n - 1);  // 反转剩余部分
+    }
+
+    private void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
         }
-        Arrays.sort(intervals, Comparator.comparingInt(interval -> interval[0]));
-        List<int[]> merged = new ArrayList<>();
-        for (int[] interval : intervals) {
-            int L = interval[0], R = interval[1];
-            if (merged.isEmpty() || merged.get(merged.size() - 1)[1] < L) {
-                merged.add(new int[]{L, R});
-            } else {
-                merged.get(merged.size() - 1)[1] = Math.max(merged.get(merged.size() - 1)[1], R);
-            }
-        }
-        return merged.toArray(new int[merged.size()][]);
     }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[][] intervals = {
-                {1, 3},
-                {2, 6},
-                {8, 10},
-                {15, 18}
-        };
-        int[][] result = solution.merge(intervals);
-        System.out.println(Arrays.deepToString(result));
+        int[] nums = {1, 2, 3, 4, 5, 6, 7};
+        int k = 3;
+        solution.rotate(nums, k);
+        System.out.println(Arrays.toString(nums));
     }
 }
