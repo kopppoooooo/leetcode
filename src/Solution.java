@@ -1,33 +1,30 @@
-import java.util.Arrays;
-
 class Solution {
-    public int[] productExceptSelf(int[] nums) {
-        int length = nums.length;
-        int[] answer = new int[length];
-
-        // answer[i] 表示索引 i 左侧所有元素的乘积
-        // 因为索引为 '0' 的元素左侧没有元素， 所以 answer[0] = 1
-        answer[0] = 1;
-        for (int i = 1; i < length; i++) {
-            answer[i] = nums[i - 1] * answer[i - 1];
+    public int firstMissingPositive(int[] nums) {
+        // 原地哈希，数组做哈希
+        int n = nums.length;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] <= 0) {
+                nums[i] = n + 1;
+            }
         }
-
-        // R 为右侧所有元素的乘积
-        // 刚开始右边没有元素，所以 R = 1
-        int R = 1;
-        for (int i = length - 1; i >= 0; i--) {
-            // 对于索引 i，左边的乘积为 answer[i]，右边的乘积为 R
-            answer[i] = answer[i] * R;
-            // R 需要包含右边所有的乘积，所以计算下一个结果时需要将当前值乘到 R 上
-            R *= nums[i];
+        for (int i = 0; i < n; ++i) {
+            int num = Math.abs(nums[i]);
+            if (num <= n) {
+                nums[num - 1] = -Math.abs(nums[num - 1]);
+            }
         }
-        return answer;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] > 0) {
+                return i + 1;
+            }
+        }
+        return n + 1;
     }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] nums = {1, 2, 3, 4};
-        int[] result = solution.productExceptSelf(nums);
-        System.out.println(Arrays.toString(result));
+        int[] nums = {3, 4, -1, 1};
+        int result = solution.firstMissingPositive(nums);
+        System.out.println(result);
     }
 }
