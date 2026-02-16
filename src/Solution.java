@@ -1,35 +1,36 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 class Solution {
-    public List<Integer> spiralOrder(int[][] matrix) {
-        List<Integer> order = new ArrayList<>();
-        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
-            return order;
+    public void rotate(int[][] matrix) {
+        // 方法二：不使用额外内存空间的旋转 -> 原地旋转
+//        int n = matrix.length;
+//        for (int i = 0; i < n / 2; ++i) {
+//            for (int j = 0; j < (n + 1) / 2; ++j) {
+//                int temp = matrix[i][j];
+//                matrix[i][j] = matrix[n - j - 1][i];
+//                matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1];
+//                matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1];
+//                matrix[j][n - i - 1] = temp;
+//            }
+//        }
+        // 方法三：用翻转代替旋转
+        int n = matrix.length;
+        // 水平翻转
+        for (int i = 0; i < n / 2; ++i) {
+            for (int j = 0; j < n; ++j) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[n - i - 1][j];
+                matrix[n - i - 1][j] = temp;
+            }
         }
-        int rows = matrix.length, columns = matrix[0].length;
-        int left = 0, right = columns - 1, top = 0, bottom = rows - 1;
-        while (left <= right && top <= bottom) {
-            for (int column = left; column <= right; column++) {
-                order.add(matrix[top][column]);
+        // 主对角线翻转
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
             }
-            for (int row = top + 1; row <= bottom; row++) {
-                order.add(matrix[row][right]);
-            }
-            if (left < right && top < bottom) {
-                for (int column = right - 1; column > left; column--) {
-                    order.add(matrix[bottom][column]);
-                }
-                for (int row = bottom; row > top; row--) {
-                    order.add(matrix[row][left]);
-                }
-            }
-            left++;
-            right--;
-            top++;
-            bottom--;
         }
-        return order;
     }
 
     public static void main(String[] args) {
@@ -41,8 +42,10 @@ class Solution {
                 {7, 8, 9}
         };
 
-        List<Integer> resultList = solution.spiralOrder(matrix);
+        solution.rotate(matrix);
 
-        System.out.println(resultList);
+        for (int[] row : matrix) {
+            System.out.println(Arrays.toString(row));
+        }
     }
 }
