@@ -1,39 +1,48 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
-    public void setZeroes(int[][] matrix) {
-        int m = matrix.length, n = matrix[0].length;
-        boolean[] row = new boolean[m];
-        boolean[] col = new boolean[n];
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (matrix[i][j] == 0) {
-                    row[i] = col[j] = true;
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> order = new ArrayList<>();
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return order;
+        }
+        int rows = matrix.length, columns = matrix[0].length;
+        int left = 0, right = columns - 1, top = 0, bottom = rows - 1;
+        while (left <= right && top <= bottom) {
+            for (int column = left; column <= right; column++) {
+                order.add(matrix[top][column]);
+            }
+            for (int row = top + 1; row <= bottom; row++) {
+                order.add(matrix[row][right]);
+            }
+            if (left < right && top < bottom) {
+                for (int column = right - 1; column > left; column--) {
+                    order.add(matrix[bottom][column]);
+                }
+                for (int row = bottom; row > top; row--) {
+                    order.add(matrix[row][left]);
                 }
             }
+            left++;
+            right--;
+            top++;
+            bottom--;
         }
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (row[i] || col[j]) {
-                    matrix[i][j] = 0;
-                }
-            }
-        }
+        return order;
     }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
 
         int[][] matrix = {
-                {0, 1, 2, 0},
-                {3, 4, 5, 2},
-                {1, 3, 1, 5}
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
         };
 
-        solution.setZeroes(matrix);
+        List<Integer> resultList = solution.spiralOrder(matrix);
 
-        for (int[] row : matrix) {
-            System.out.println(Arrays.toString(row));
-        }
+        System.out.println(resultList);
     }
 }
