@@ -1,63 +1,104 @@
+import java.util.*;
+
 class Solution {
-    public boolean searchMatrix(int[][] matrix, int target) {
-//        // 方法一：暴力 O(mn) O(1)
-//        for (int[] row : matrix) {
-//            for (int element : row) {
-//                if (element == target) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
+    public List<Integer> inorderTraversal(TreeNode root) {
+        // 方法一：递归。
+        List<Integer> res = new ArrayList<>();
+        inorder(root, res);
+        return res;
 
-//        // 方法二：按行二分查找 O(mlogn) O(1)
-//        for (int[] row : matrix) {
-//            int index = search(row, target);
-//            if (index >= 0) {
-//                return true;
+        // 方法二：迭代。递归的时候隐式地维护了一个栈，而我们在迭代的时候需要显式地将这个栈模拟出来
+//        List<Integer> res = new ArrayList<>();
+//        Deque<TreeNode> stk = new LinkedList<>();
+//        while (root != null || !stk.isEmpty()) {
+//            while (root != null) {
+//                stk.push(root);
+//                root = root.left;
 //            }
+//            root = stk.pop();
+//            res.add(root.val);
+//            root = root.right;
 //        }
-//        return false;
-
-        // 方法三：Z字形查找（右上角往左、下查找） O(m+n) O(1)
-        int m = matrix.length, n = matrix[0].length;
-        int x = 0, y = n - 1;
-        while (x < m && y >= 0) {
-            if (matrix[x][y] == target) {
-                return true;
-            }
-            if (matrix[x][y] > target) {
-                --y;
-            } else {
-                ++x;
-            }
-        }
-        return false;
+//        return res;
     }
 
-    public int search(int[] nums, int target) {
-        int low = 0, high = nums.length - 1;
-        while (low <= high) {
-            int mid = (high - low) / 2 + low;
-            int num = nums[mid];
-            if (num == target) {
-                return mid;
-            } else if (num > target) {
-                high = mid - 1;
-            } else {
-                low = mid + 1;
-            }
+    public void inorder(TreeNode root, List<Integer> res) {
+        if (root == null) {
+            return;
         }
-        return -1;
+        inorder(root.left, res);
+        res.add(root.val);
+        inorder(root.right, res);
     }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        int[][] matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+//        // 测试用例1：普通二叉树
+//        //     1
+//        //      \
+//        //       2
+//        //      /
+//        //     3
+//        TreeNode root1 = new TreeNode(1);
+//        root1.right = new TreeNode(2);
+//        root1.right.left = new TreeNode(3);
+//        System.out.println("测试用例1 - 预期：[1,3,2]");
+//        System.out.println("实际结果：" + solution.inorderTraversal(root1));
+//        System.out.println();
 
-        boolean result = solution.searchMatrix(matrix, 5);
-
-        System.out.println(result);
+//        // 测试用例2：空树
+//        TreeNode root2 = null;
+//        System.out.println("测试用例2 - 预期：[]");
+//        System.out.println("实际结果：" + solution.inorderTraversal(root2));
+//        System.out.println();
+//
+//        // 测试用例3：单节点树
+//        TreeNode root3 = new TreeNode(1);
+//        System.out.println("测试用例3 - 预期：[1]");
+//        System.out.println("实际结果：" + solution.inorderTraversal(root3));
+//        System.out.println();
+//
+        // 测试用例4：完全二叉树
+        //       1
+        //      / \
+        //     2   3
+        //    / \ / \
+        //   4  5 6  7
+        TreeNode root4 = new TreeNode(1);
+        root4.left = new TreeNode(2);
+        root4.right = new TreeNode(3);
+        root4.left.left = new TreeNode(4);
+        root4.left.right = new TreeNode(5);
+        root4.right.left = new TreeNode(6);
+        root4.right.right = new TreeNode(7);
+        System.out.println("测试用例4 - 预期：[4,2,5,1,6,3,7]");
+        System.out.println("实际结果：" + solution.inorderTraversal(root4));
+        System.out.println();
+//
+//        // 测试用例5：左斜树
+//        //     1
+//        //    /
+//        //   2
+//        //  /
+//        // 3
+//        TreeNode root5 = new TreeNode(1);
+//        root5.left = new TreeNode(2);
+//        root5.left.left = new TreeNode(3);
+//        System.out.println("测试用例5 - 预期：[3,2,1]");
+//        System.out.println("实际结果：" + solution.inorderTraversal(root5));
+//        System.out.println();
+//
+//        // 测试用例6：右斜树
+//        // 1
+//        //  \
+//        //   2
+//        //    \
+//        //     3
+//        TreeNode root6 = new TreeNode(1);
+//        root6.right = new TreeNode(2);
+//        root6.right.right = new TreeNode(3);
+//        System.out.println("测试用例6 - 预期：[1,2,3]");
+//        System.out.println("实际结果：" + solution.inorderTraversal(root6));
     }
 }
